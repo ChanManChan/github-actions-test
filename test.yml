@@ -1,0 +1,31 @@
+name: Nandu
+age: 25
+address: "Trichy, TamilNadu"
+active: true
+key:
+  key: value
+  key2: 33
+  key3:
+    key: value
+    key2: 45
+jsonObject: { key: value, key2: 33, key3: { key: value, key2: 45 } }
+array:
+  - item1
+  - item2
+  - { key: value }
+jsonArray: [item1, item2]
+objectsArray:
+  - key: value
+    keySub1: valueSub1
+  - key2: value2
+    keySub1: valueSub1
+longTextWithoutNewlines: >
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  Quod quidem iam fit etiam in Academia. Tecum optime, deinde
+  etiam cum mediocri amico. Sed tamen intellego quid velit.
+  Bestiarum vero nullum iudicium puto. Cur deinde Metrodori liberos commendas.
+longTextWithNewlines: |
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  Quod quidem iam fit etiam in Academia. Tecum optime, deinde
+  etiam cum mediocri amico. Sed tamen intellego quid velit.
+  Bestiarum vero nullum iudicium puto. Cur deinde Metrodori liberos commendas.
