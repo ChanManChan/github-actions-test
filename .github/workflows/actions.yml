@@ -4,8 +4,32 @@ on: [push]
 
 # actions are some code that does some specific task which you can use in your steps (in your github workflow)
 # By having actions we can have less code in our workflows and also we can use the code that somebody else shared
-# https://github.com/actions/hello-world-javascript-action
+
+#! https://github.com/actions/hello-world-javascript-action
 # actions are written in JS
+
+# jobs:
+#   run-github-actions:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: List Files
+#         run: |
+#           pwd
+#           ls
+#       - name: Simple JS Action
+#         id: greet
+#         uses: actions/hello-world-javascript-action@v1
+#         with:
+#           who-to-greet: NandaGopal
+#       - name: Log Greeting Time
+#         run: echo "${{ steps.greet.outputs.time }}"
+
+# pwd -> /home/runner/work/github-actions-test/github-actions-test <- This is the folder that is setup in the VM.
+# ls <- did not work (did not have any files). By default Github will not clone the repository into the working directory (pwd). This is because not all not all workflows will have to use the files in the repository. It maybe unnecessary to clone it and then not to use any of the files.
+# In order to clone your repository into the VM in this directory (pwd), we can use an action to do that.
+
+#! https://github.com/actions/checkout
+# actions/checkout <- will authenticate with your repository and then fetch the code and checkout into the commit that triggered this workflow to run
 
 jobs:
   run-github-actions:
@@ -14,7 +38,13 @@ jobs:
       - name: List Files
         run: |
           pwd
-          ls
+          ls -a
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: List Files After Checkout
+        run: |
+          pwd
+          ls -a
       - name: Simple JS Action
         id: greet
         uses: actions/hello-world-javascript-action@v1
