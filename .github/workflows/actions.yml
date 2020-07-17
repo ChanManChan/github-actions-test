@@ -2,10 +2,19 @@ name: Actions Workflow
 
 on: [push]
 
+# actions are some code that does some specific task which you can use in your steps (in your github workflow)
+# By having actions we can have less code in our workflows and also we can use the code that somebody else shared
+# https://github.com/actions/hello-world-javascript-action
+# actions are written in JS
+
 jobs:
   run-github-actions:
     runs-on: ubuntu-latest
     steps:
+      - name: List Files
+        run: |
+          pwd
+          ls
       - name: Simple JS Action
         id: greet
         uses: actions/hello-world-javascript-action@v1
