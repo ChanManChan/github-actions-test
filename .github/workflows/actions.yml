@@ -1,12 +1,12 @@
 name: Actions Workflow
 
-on: [push]
 # actions are some code that does some specific task which you can use in your steps (in your github workflow)
 # By having actions we can have less code in our workflows and also we can use the code that somebody else shared
 
 #! https://github.com/actions/hello-world-javascript-action
 # actions are written in JS
 
+# on: [push]
 # jobs:
 #   run-github-actions:
 #     runs-on: ubuntu-latest
@@ -30,6 +30,7 @@ on: [push]
 #! https://github.com/actions/checkout
 # actions/checkout <- will authenticate with your repository and then fetch the code and checkout into the commit that triggered this workflow to run
 
+# on: [push]
 # jobs:
 #   run-github-actions:
 #     runs-on: ubuntu-latest
@@ -66,6 +67,44 @@ on: [push]
 
 #! ENVIRONMENT VARIABLES
 
+# on: [push]
+# jobs:
+#   run-github-actions:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: List Files
+#         run: |
+#           pwd
+#           ls -a
+#           echo $GITHUB_SHA
+#           echo $GITHUB_REPOSITORY
+#           echo $GITHUB_WORKSPACE
+#           echo "${{ github.token }}"
+#       - name: Checkout
+#         uses: actions/checkout@v1
+#       - name: List Files After Checkout
+#         run: |
+#           pwd
+#           ls -a
+#       - name: Simple JS Action
+#         id: greet
+#         uses: actions/hello-world-javascript-action@v1
+#         with:
+#           who-to-greet: NandaGopal
+#       - name: Log Greeting Time
+#         run: echo "${{ steps.greet.outputs.time }}"
+#! echo $GITHUB_SHA <- commit ID of the specific commit that triggered this workflow to run
+#? 3f1306ff9ef9648a2b98a02a8c159476d877c1ae
+#! echo $GITHUB_REPOSITORY <- username and the repository name
+#? ChanManChan/github-actions-test
+#! echo $GITHUB_WORKSPACE <- workspace directory ( same as pwd )
+#? /home/runner/work/github-actions-test/github-actions-test
+#! echo "${{ github.token }}" <- a token that is used to authenticate with your github repository.
+#? *** <- hidden for security reasons in the logs
+
+#! MULTIPLE EVENTS
+on: [push, pull_request]
+
 jobs:
   run-github-actions:
     runs-on: ubuntu-latest
@@ -91,7 +130,3 @@ jobs:
           who-to-greet: NandaGopal
       - name: Log Greeting Time
         run: echo "${{ steps.greet.outputs.time }}"
-#! echo $GITHUB_SHA <- commit ID of the specific commit that triggered this workflow to run
-#! echo $GITHUB_REPOSITORY <- username and the repository name
-#! echo $GITHUB_WORKSPACE <- workspace directory ( same as pwd )
-#! echo "${{ github.token }}" <- a token that is used to authenticate with your github repository.
