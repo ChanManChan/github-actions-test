@@ -103,7 +103,17 @@ name: Actions Workflow
 #? *** <- hidden for security reasons in the logs
 
 #! MULTIPLE EVENTS
-on: [push, pull_request]
+#? Without activity types
+# on: [push, pull_request]
+#? With activity types
+on:
+  push:
+  pull_request:
+    types:
+      - closed
+      - assigned
+      - opened
+      - reopened
 
 jobs:
   run-github-actions:
