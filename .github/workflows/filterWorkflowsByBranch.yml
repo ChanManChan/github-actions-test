@@ -1,0 +1,65 @@
+name: Filter Workflow
+
+#! This workflow will only run when we push to master branch and same applies to pull_request eg: if the pull request is trying to merge with master, this workflow will run.
+# - "feature/*" <- Pattern will match with anything that starts with feature/featA, feature/featB... but it will not match with feature/feat/a ('*' does not match the '/' character)
+# to include feature/feat/a, the pattern is 'feature/**' <- and this will match feature/featA, feature/featB and also feature/feat/a
+#? https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+
+on:
+  push:
+    branches:
+      - master
+      - "feature/*"
+    tags:
+      - v1.*
+    # tags-ignore:
+    # -   v4.*
+    paths:
+      #  Only run this workflow when we change any JavaScript files
+      - "**.js"
+      # Ignore a certain JavaScript file
+      - "!filename.js"
+      # paths-ignore:
+      # If we push anything in the folder called 'docs' <- Do not run this workflow
+      # - "docs/**"
+jobs:
+  run-github-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Payload
+        run: echo ${{ github.event.client_payload.env }}
+      - name: List Files
+        run: |
+          pwd
+          ls -a
+          echo $GITHUB_SHA
+          echo $GITHUB_REPOSITORY
+          echo $GITHUB_WORKSPACE
+          echo "${{ github.token }}"
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: List Files After Checkout
+        run: |
+          pwd
+          ls -a
+      - name: Simple JS Action
+        id: greet
+        uses: actions/hello-world-javascript-action@v1
+        with:
+          who-to-greet: NandaGopal
+      - name: Log Greeting Time
+        run: echo "${{ steps.greet.outputs.time }}"
+#! Workflow to run on all branches except some branches then
+# on:
+#   push:
+#     branches-ignore:
+#       - master
+#       - "feature/*"
+
+#! To ignore a certain branch that matches a pattern
+# on:
+#   push:
+#     branches-ignore:
+#       - master
+#       - "feature/*"
+#       - "!feature/featC"
