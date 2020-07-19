@@ -7,8 +7,31 @@ env:
 
 jobs:
   create-issue:
+    # https://github.com/ChanManChan/github-actions-test/issues/2 <- This job created this issue automatically
     runs-on: ubuntu-latest
     steps:
+      - name: Push a random file
+        run: |
+          pwd
+          ls -a
+          #! Clone our repository in this working directory
+          git init
+          #! On our Virtual Machine where this workflow will run, we don't have have any SSH keys configured. (This is where we can use the GitHub Token for authorization)
+          git remote add origin "https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git"
+          git config --global user.email "my-bot@bot.com"
+          git config --global user.name "my-bot"
+          git fetch
+          git checkout master
+          #! Since we are going to push into master, set the upstream to master too.
+          git branch --set-upstream-to=origin/master
+          #! When we run "git pull", our working directory should be now filled with our files in our repository.
+          git pull
+          ls -a
+          echo $RANDOM >> random.txt
+          ls -a
+          git add -A
+          git commit -m "Random file"
+          git push
       - name: Create issue using REST API
         run: |
           curl --request POST \
@@ -62,3 +85,9 @@ jobs:
           echo "WF_ENV: ${WF_ENV}"
           echo "JOB_ENV: ${JOB_ENV}"
           echo "STEP_ENV: ${STEP_ENV}"
+
+# With this GitHub token, we can commit and push stuff to our repository from inside the Virtual Machine when we run our workflow.
+
+#! Eg: When we run our workflow, we need to create a file that has a random number and push it to our repository. So this file will be created on our Virtual Machine and POST into our repository.
+# Similar to what the checkout action does, we'll pull our repository into our working directory, then we are going to checkout into master but in addition to that we will also try to push some file and pushing some file will require authentication.
+# Creating a file with random number should be written in our workflow (echo $RANDOM >> random.txt)
