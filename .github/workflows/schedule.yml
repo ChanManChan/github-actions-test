@@ -13,9 +13,9 @@ name: Schedule Workflow
 #  above, both of them will run twice every 6 minutes
 
 on:
-  schedule:
-    - cron: "0/5 * * * *"
-    - cron: "0/6 * * * *"
+  # schedule:
+  # - cron: "0/5 * * * *"
+  # - cron: "0/6 * * * *"
   # push:
   pull_request:
     types:
