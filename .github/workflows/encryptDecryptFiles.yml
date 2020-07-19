@@ -9,14 +9,14 @@ jobs:
   decrypt:
     runs-on: ubuntu-latest
     steps:
-      - name: Decrypt file
-        env:
-          PASSPHRASE: ${{ secrets.PASSPHRASE }}
       #! After below "uses" step, we have access to the files in our repository here, including our secret encrypted file which we need to decrypt here in our decrypt job.
       - uses: actions/checkout@v1
+      - name: Decrypt file
         #! Enter the passphrase below to decrypt successfully (Add the passphrase as a secret in github)
         #? https://github.com/ChanManChan/github-actions-test/settings/secrets  <- Add the passphrase here
         run: gpg --quiet --batch --yes --decrypt --passphrase="$PASSPHRASE" --output $HOME/secret.json secret.json.gpg
+        env:
+          PASSPHRASE: ${{ secrets.PASSPHRASE }}
       - name: Print our file content
         run: cat $HOME/secret.json
   create-random-file:
