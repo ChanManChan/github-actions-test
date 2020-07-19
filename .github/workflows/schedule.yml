@@ -1,0 +1,51 @@
+name: Schedule Workflow
+
+#! cron schedule expression :- "minutes-hours-dayOfTheMonth-month-dayOfTheWeek"
+#! each one of these can be a certain number or a certain symbol
+
+#? "* * * * *" <- means any value (eg: our workflow will run 24*7)
+#? "1 * * * *" <- workflow will run at min one of every hour (eg: 12:01, 13:01...)
+#? https://crontab.guru/
+#? https://crontab.guru/examples.html
+
+#   - cron: "0/5 * * * *"
+#   - cron: "0/6 * * * *"
+#  above, both of them will run twice every 6 minutes
+
+on:
+  schedule:
+    - cron: "0/5 * * * *"
+    - cron: "0/6 * * * *"
+  # push:
+  pull_request:
+    types:
+      - closed
+      - assigned
+      - opened
+      - reopened
+
+jobs:
+  run-github-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List Files
+        run: |
+          pwd
+          ls -a
+          echo $GITHUB_SHA
+          echo $GITHUB_REPOSITORY
+          echo $GITHUB_WORKSPACE
+          echo "${{ github.token }}"
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: List Files After Checkout
+        run: |
+          pwd
+          ls -a
+      - name: Simple JS Action
+        id: greet
+        uses: actions/hello-world-javascript-action@v1
+        with:
+          who-to-greet: NandaGopal
+      - name: Log Greeting Time
+        run: echo "${{ steps.greet.outputs.time }}"
