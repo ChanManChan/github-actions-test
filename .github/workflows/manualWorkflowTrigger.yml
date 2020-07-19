@@ -1,11 +1,23 @@
 name: Manual Workflow
 
+#! https://developer.github.com/v3/repos/#create-a-repository-dispatch-event
+
 # POST https://api.github.com/repos/ChanManChan/github-actions-test/dispatches <- when I send this request from postman, it will
 #                                                                                 trigger this ("repository_dispatch") event.
 
 # Body :-
 # {
 #   "event_type": "build" <- this can be anything
+# }
+#  <- we can even send a payload
+
+# OR
+
+# {
+#     "event_type": "build",
+#     "client_payload": {
+#         "env": "production"  <- How to retrieve the client_payload in our workflow ? It'll be available in the "github" object
+#     }
 # }
 
 on:
@@ -22,6 +34,8 @@ jobs:
   run-github-actions:
     runs-on: ubuntu-latest
     steps:
+      - name: Payload
+        run: echo ${{ github.event.client_payload.env }}
       - name: List Files
         run: |
           pwd
