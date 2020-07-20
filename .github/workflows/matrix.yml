@@ -1,3 +1,6 @@
+# ACTIONS_RUNNER_DEBUG
+# ACTIONS_STEP_DEBUG
+
 name: Matrix
 
 on:
@@ -13,4 +16,26 @@ jobs:
         with:
           node-version: 6
       - name: Log node version again
+        run: node -v
+  # With this we can run our workflow on a different node version. But for running it on multiple versions (6, 7 and more), this is where we can use the strategy option.
+  node-version-multiple:
+    strategy:
+      matrix:
+        #! 3 X 3 matrix
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        node_version: [6, 8, 10]
+        # "fail-fast: true" <- if one of these job fails, all other jobs that are running in this matrix stops.
+      # fail-fast: true
+      # max-parallel: 2
+      #! To reference the current OS for our current job, use the context.
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Log node version (multiple)
+        run: node -v
+      - uses: actions/setup-node@v1
+        with:
+          #! reference the current version in each matrix runs
+          node-version: ${{ matrix.node_version }}
+      - name: Log node version again (multiple)
+        # for the 1st job it will be 6, then it will be 8, and then 10
         run: node -v
