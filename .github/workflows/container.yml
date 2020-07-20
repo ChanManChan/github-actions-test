@@ -1,0 +1,17 @@
+name: Container
+
+on:
+  - push
+
+jobs:
+  node-docker:
+    # So far I have ran my workflows on virtual machines, using some OS that GitHub Actions provides. But we can also use a docker container that will be installed on this virtual machine (ubuntu-latest) and then our step will run on it rather than directly on our virtual machine.
+    runs-on: ubuntu-latest
+    container:
+      image: node:12.18.2-alpine3.10
+      # Any step that we run, will run inside of this container and not directly in our host, which is our Virtual machine
+    steps:
+      - name: Log node version
+        run: |
+          node -v
+          cat /etc/os-release
