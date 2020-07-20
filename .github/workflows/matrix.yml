@@ -39,3 +39,31 @@ jobs:
       - name: Log node version again (multiple)
         # for the 1st job it will be 6, then it will be 8, and then 10
         run: node -v
+  node-version-multiple-IncAndExcld-Matrix-Config:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        node_version: [6, 8, 10]
+        include:
+          - os: ubuntu-latest
+            node_version: 8
+            # "is_ubuntu_8" <- inside of our matrix context we will have a new variable which is "is_ubuntu_8" and this will exist only when the job is running for os: ubuntu_latest and node_version: 8
+            is_ubuntu_8: "true"
+        exclude:
+          - os: ubuntu-latest
+            node_version: 6
+          - os: macos-latest
+            node_version: 8
+    runs-on: ${{ matrix.os }}
+    env:
+      IS_UBUNTU_8: ${{ matrix.is_ubuntu_8 }}
+    steps:
+      - name: Log node version (multiple)
+        run: node -v
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Log node version again (multiple)
+        run: |
+          node -v
+          echo $IS_UBUNTU_8
