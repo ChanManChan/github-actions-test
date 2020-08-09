@@ -1,7 +1,7 @@
 name: ContainersWithinSteps
 
 on:
-  - pull_request
+  - push
 
 jobs:
   docker-steps:
@@ -11,22 +11,25 @@ jobs:
     steps:
       - name: log node version
         run: node -v
-        # A step that uses it's own container
       - name: Step with container
-        # uses: actions/checkout
-        # we can override the entry point of this docker image using the "with" key
         uses: docker://node:12.14.1-alpine3.10
         with:
-          # this is also used to provide inputs to our actions
           entrypoint: "/bin/echo"
           args: "Hello World from step"
       - name: Log node version inside this docker image
         uses: docker://node:12.14.1-alpine3.10
         with:
-          # path to the node exec file
-          # type -a node <- path
           entrypoint: /usr/local/bin/node
           args: -v
+        # to use this (script.sh) file in our repo, we need to have access to this file.  use the checkout action
+      - uses: actions/checkout@v1
+      - name: Run a script
+        uses: docker://node:12.14.1-alpine3.10
+        with:
+          # in order to make this script executable <- chmod +x script.sh (run this before commit)
+          entrypoint: ./script.sh
+          # echo $1 $2 $3
+          args: "Testing args passing"
   node-docker:
     runs-on: ubuntu-latest
     services:
@@ -43,6 +46,3 @@ jobs:
         run: 'curl -X POST http://localhost:3001/api/user -H ''Content-Type: application/json'' -d ''{"username": "NandaGopalFromDocker", "address": "New Delhi"}'''
       - name: Get Users
         run: curl http://localhost:3001/api/users
-# ENTRYPOINT ['/bin/echo', 'Hello'] === echo "Hello"
-# CMD ['World']
-# When this container runs it will echo 'Hello World'
