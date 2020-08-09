@@ -2,7 +2,7 @@
 
 name: Encrypting ENV Variables
 
-on: push
+on: pull_request
 
 #! Global
 # An environment variable available for all jobs in our workflow

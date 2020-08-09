@@ -107,7 +107,7 @@ name: Actions Workflow
 # on: [push, pull_request]
 #? With activity types
 on:
-  push:
+  pull_request_review:
   pull_request:
     types:
       - closed
