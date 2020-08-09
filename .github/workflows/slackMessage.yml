@@ -1,7 +1,7 @@
-name: ContainersWithinSteps
+name: SlackMessage
 
 on:
-  - pull_request
+  - push
 
 jobs:
   docker-steps:
@@ -21,15 +21,17 @@ jobs:
         with:
           entrypoint: /usr/local/bin/node
           args: -v
-        # to use this (script.sh) file in our repo, we need to have access to this file.  use the checkout action
       - uses: actions/checkout@v1
       - name: Run a script
         uses: docker://node:12.14.1-alpine3.10
         with:
-          # in order to make this script executable <- chmod +x script.sh (run this before commit)
           entrypoint: ./script.sh
-          # echo $1 $2 $3
           args: "Testing args passing"
+      - name: Send a slack message
+        uses: docker://technosophos/slack-notify
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: "Hello from GithubCI. Ignore this message, I'm testing something."
   node-docker:
     runs-on: ubuntu-latest
     services:
@@ -46,18 +48,7 @@ jobs:
         run: 'curl -X POST http://localhost:3001/api/user -H ''Content-Type: application/json'' -d ''{"username": "NandaGopalFromDocker", "address": "New Delhi"}'''
       - name: Get Users
         run: curl http://localhost:3001/api/users
-#! docker: Error response from daemon: OCI runtime create failed: container_linux.go:349: starting container process caused "exec: \"./script.sh\": permission denied": unknown.
-# The runner is trying to run your entrypoint.sh as a script, but it looks like your entrypoint.sh is missing the execute bit.  You’ll need to add it to that file in your action’s repository.
-
-# On Linux or macOS, run:
-
-# chmod +x entrypoint.sh
-# git add entrypoint.sh
-# git commit
-
-# On Windows, run:
-
-# git add --chmod=+x -- entrypoint.sh
-# git commit
-
-# And then push the changes back up.
+# https://hub.docker.com/r/technosophos/slack-notify/
+# for SLACK_WEBHOOK, create a slack application
+# api.slack.com/apps
+# Activate Incoming Webhooks
