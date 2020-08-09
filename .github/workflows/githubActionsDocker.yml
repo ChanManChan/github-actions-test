@@ -1,7 +1,7 @@
 name: DockerContainers
 
 on:
-  - push
+  - pull_request
 
 jobs:
   node-docker:
@@ -27,3 +27,4 @@ jobs:
 
 # eg: in app.js
 # mongoose.connect("mongodb://mongo:27017/users", {...}) instead of mongoose.connect("mongodb://localhost:27017/users") <- in docker in order to communicate with another container we use our service name.
+
